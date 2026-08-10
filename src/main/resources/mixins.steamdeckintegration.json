@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "minVersion": "0.8.5-GTNH",
+  "package": "ch.kmoes.steamdeckintegration.mixins",
+  "refmap": "mixins.steamdeckintegration.refmap.json",
+  "target": "@env(DEFAULT)",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [],
+  "client": ["MixinMinecraft_Example", "MixinMEGuiTextField"],
+  "server": []
+}
