@@ -6,6 +6,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import ch.kmoes.steamdeckintegration.SteamHelper;
+
 @Pseudo
 @Mixin(targets = "appeng.client.gui.widgets.MEGuiTextField")
 public class MixinMEGuiTextField {
@@ -14,6 +16,7 @@ public class MixinMEGuiTextField {
     private void steamdeckintegration$showKeyboard(boolean focus, CallbackInfo ci) {
         System.out.println("New focus: " + focus);
         if (focus) {
+            SteamHelper.openKeyboard();
             System.out.println("Keyboard would be shown!");
         }
     }
