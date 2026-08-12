@@ -17,12 +17,16 @@ public class MixinGuiTextField {
     public int xPosition;
     @Shadow(remap = false)
     public int yPosition;
+    @Shadow(remap = false)
+    public int width;
+    @Shadow(remap = false)
+    public int height;
 
     @Inject(method = "setFocused", at = @At("TAIL"))
     private void steamdeckintegration$showKeyboard(boolean p_146195_1_, CallbackInfo ci) {
         System.out.println("New focus: " + p_146195_1_);
         if (p_146195_1_) {
-            SteamHelper.openKeyboard(xPosition, yPosition);
+            SteamHelper.openKeyboard(xPosition, yPosition, width, height);
             System.out.println("Keyboard would be shown!");
         }
     }

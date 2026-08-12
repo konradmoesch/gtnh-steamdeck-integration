@@ -15,9 +15,9 @@ public class SteamHelper {
         onSteamDeck = true;
     }
 
-    public static void openKeyboard(int x, int y) {
+    public static void openKeyboard(int x, int y, int width, int height) {
         if (steamAvailable && onSteamDeck) {
-            showFloatingGamepadTextInput(0, x, y, 100, 10);
+            showFloatingGamepadTextInput(0, x, y, width, height);
         }
     }
 
