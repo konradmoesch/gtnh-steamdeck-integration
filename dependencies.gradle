@@ -35,5 +35,4 @@
  */
 dependencies {
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.7.69-GTNH:dev")
-    runtimeOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-754-GTNH:dev")
 }
