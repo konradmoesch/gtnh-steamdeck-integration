@@ -10,19 +10,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import ch.kmoes.steamdeckintegration.SteamHelper;
 
 @Pseudo
-@Mixin(remap = false, targets = "appeng.client.gui.widgets.MEGuiTextField")
-public class MixinMEGuiTextField {
+@Mixin(remap = false, targets = "net.minecraft.client.gui.GuiTextField")
+public class MixinGuiTextField {
 
     @Shadow(remap = false)
-    public int x;
+    public int xPosition;
     @Shadow(remap = false)
-    public int y;
+    public int yPosition;
 
     @Inject(method = "setFocused", at = @At("TAIL"))
-    private void steamdeckintegration$showKeyboard(boolean focus, CallbackInfo ci) {
-        System.out.println("New focus: " + focus);
-        if (focus) {
-            SteamHelper.openKeyboard(x, y);
+    private void steamdeckintegration$showKeyboard(boolean p_146195_1_, CallbackInfo ci) {
+        System.out.println("New focus: " + p_146195_1_);
+        if (p_146195_1_) {
+            SteamHelper.openKeyboard(xPosition, yPosition);
             System.out.println("Keyboard would be shown!");
         }
     }
