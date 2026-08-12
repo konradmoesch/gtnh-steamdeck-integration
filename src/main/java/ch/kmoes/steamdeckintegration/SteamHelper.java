@@ -1,71 +1,50 @@
 package ch.kmoes.steamdeckintegration;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import com.codedisaster.steamworks.*;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 public class SteamHelper {
 
-    private static SteamUtils steamUtils;
     private static boolean steamAvailable;
     private static boolean onSteamDeck;
 
     public static void init() {
-        System.out.println("=== Steam diagnostics ===");
-        System.out.println("user.home = " + System.getProperty("user.home"));
-        System.out.println("user.dir  = " + System.getProperty("user.dir"));
-        System.out.println(
-            "cwd      = " + Paths.get("")
-                .toAbsolutePath());
+        // TODO: test for running steam and steam deck here
+        steamAvailable = true;
+        onSteamDeck = true;
+    }
 
-        System.out.println(
-            "steam_appid.txt = " + Paths.get("steam_appid.txt")
-                .toAbsolutePath());
+    public static void openKeyboard(int x, int y) {
+        if (steamAvailable && onSteamDeck) {
+            showFloatingGamepadTextInput(0, x, y, 100, 10);
+        }
+    }
 
-        System.out.println("steam_appid exists = " + Files.exists(Paths.get("steam_appid.txt")));
+    private static void showFloatingGamepadTextInput(int inputMode, int x, int y, int width, int height) {
         try {
-            SteamLibraryLoader loader = new SteamLoader();
-            if (!SteamAPI.loadLibraries(loader)) {
-                System.err.println("Failed to load Steam libraries!");
-            }
-            System.out.println("Loaded Steam API libraries!");
-            makeAppIdFile();
-             System.out.println("steam_appid after writing = " + Files.exists(Paths.get("steam_appid.txt")));
-             System.out.println(
-                "appid path = " + Paths.get("steam_appid.txt").toAbsolutePath());
-
-            SteamAPI.InitResult initResult = SteamAPI.initEx();
-            if (initResult != SteamAPI.InitResult.OK) {
-                System.err.println("Failed to initialize Steam API libraries!");
-                System.err.println(initResult.toString());
-                return;
-            }
-            System.out.println("Initialized Steam API!");
-            steamAvailable = true;
-        } catch (SteamException e) {
-            throw new RuntimeException(e);
+            IPCHelper ipcHelper = new IPCHelper();
+            byte[] packet1 = { 0x26, 0x00, 0x00, 0x00 };
+            ByteBuffer b = ByteBuffer.allocate(38);
+            byte[] header = { 0x01, 0x04, 0x00, 0x00, 0x00, 0x00, 0x39, 0x03, (byte) 0x82, 0x73 };
+            byte[] trailer = { 0x00, 0x00, 0x00, 0x00, (byte) 0x97, 0x2a, 0x53, 0x75 };
+            b.order(ByteOrder.LITTLE_ENDIAN);
+            b.put(header);
+            b.putInt(inputMode);
+            b.putInt(x);
+            b.putInt(y);
+            b.putInt(width);
+            b.putInt(height);
+            b.put(trailer);
+            byte[] packet2 = b.array();
+            ipcHelper.sendIpcPacket(packet1, packet1.length);
+            ipcHelper.sendIpcPacket(packet2, packet2.length);
+            byte[] response1 = new byte[5];
+            byte[] response2 = new byte[1];
+            ipcHelper.receiveIpcPacket(response1, 5);
+            ipcHelper.receiveIpcPacket(response2, 1);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        SteamUtilsCallback callback = new SteamUtilsCallback() {};
-        steamUtils = new SteamUtils(callback);
-        onSteamDeck = steamUtils.isSteamRunningOnSteamDeck();
-        System.out.println("onSteamDeck: " + onSteamDeck);
-    }
-
-    public static void openKeyboard() {
-        if (steamAvailable && onSteamDeck) {
-            steamUtils
-                .showFloatingGamepadTextInput(SteamUtils.FloatingGamepadTextInputMode.ModeSingleLine, 0, 0, 100, 10);
-        }
-    }
-
-    private static void makeAppIdFile() throws IOException {
-        Path path = Paths.get("steam_appid.txt");
-        Files.write(path, "480".getBytes(StandardCharsets.UTF_8));
     }
 }
