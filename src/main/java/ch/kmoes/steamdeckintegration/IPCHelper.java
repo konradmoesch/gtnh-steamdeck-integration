@@ -9,6 +9,7 @@ public class IPCHelper {
 
     private final Socket socket;
 
+    // TODO: handle connection refused (e.g. no Steam running)
     public IPCHelper() throws IOException {
         socket = new Socket("127.0.0.1", 57343);
     }
