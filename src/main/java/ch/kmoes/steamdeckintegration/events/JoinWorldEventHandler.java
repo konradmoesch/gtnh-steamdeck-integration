@@ -1,5 +1,7 @@
-package ch.kmoes.steamdeckintegration;
+package ch.kmoes.steamdeckintegration.events;
 
+import ch.kmoes.steamdeckintegration.utils.ChatLogHelper;
+import ch.kmoes.steamdeckintegration.utils.SteamHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;

@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import ch.kmoes.steamdeckintegration.SteamHelper;
+import ch.kmoes.steamdeckintegration.utils.SteamHelper;
 
 @Mixin(GuiTextField.class)
 public abstract class MixinGuiTextField {

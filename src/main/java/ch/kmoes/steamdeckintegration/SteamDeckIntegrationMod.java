@@ -11,11 +11,11 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
 @Mod(
-    modid = MyMod.MODID,
+    modid = SteamDeckIntegrationMod.MODID,
     version = Tags.VERSION,
     name = "Steam Deck integration",
     acceptedMinecraftVersions = "[1.7.10]")
-public class MyMod {
+public class SteamDeckIntegrationMod {
 
     public static final String MODID = "steamdeckintegration";
     public static final Logger LOG = LogManager.getLogger(MODID);

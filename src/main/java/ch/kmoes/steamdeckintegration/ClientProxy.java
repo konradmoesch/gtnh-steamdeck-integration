@@ -1,5 +1,7 @@
 package ch.kmoes.steamdeckintegration;
 
+import ch.kmoes.steamdeckintegration.events.JoinWorldEventHandler;
+import ch.kmoes.steamdeckintegration.utils.SteamHelper;
 import net.minecraftforge.common.MinecraftForge;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;

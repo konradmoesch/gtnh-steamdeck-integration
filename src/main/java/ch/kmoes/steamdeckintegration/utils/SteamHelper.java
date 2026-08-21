@@ -1,16 +1,14 @@
-package ch.kmoes.steamdeckintegration;
+package ch.kmoes.steamdeckintegration.utils;
+
+import ch.kmoes.steamdeckintegration.SteamDeckIntegrationMod;
+import ch.kmoes.steamdeckintegration.ipc.IPCHelper;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 public class SteamHelper {
-
-    private static final Logger LOGGER = LogManager.getLogger("steamdeck-integration");
 
     private static boolean steamAvailable;
 
@@ -31,13 +29,13 @@ public class SteamHelper {
             ipcHelper = new IPCHelper();
             // Test if steam running
             String installPath = sendGetInstallPathPacket(ipcHelper);
-            LOGGER.debug("install path: {}", installPath);
+            SteamDeckIntegrationMod.LOG.debug("install path: {}", installPath);
             steamAvailable = true;
             // TODO: Test whether on steam deck
             onSteamDeck = true;
-            LOGGER.info("Successfully connected to Steam");
+            SteamDeckIntegrationMod.LOG.info("Successfully connected to Steam");
         } catch (IOException e) {
-            LOGGER.warn("no connection to steam");
+            SteamDeckIntegrationMod.LOG.warn("no connection to steam");
             steamAvailable = false;
             onSteamDeck = false;
         }
