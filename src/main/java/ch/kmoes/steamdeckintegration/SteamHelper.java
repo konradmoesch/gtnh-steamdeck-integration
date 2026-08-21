@@ -5,9 +5,23 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class SteamHelper {
 
+    private static final Logger LOGGER = LogManager.getLogger("steamdeck-integration");
+
     private static boolean steamAvailable;
+
+    public static boolean isOnSteamDeck() {
+        return onSteamDeck;
+    }
+
+    public static boolean isSteamAvailable() {
+        return steamAvailable;
+    }
+
     private static boolean onSteamDeck;
 
     private static IPCHelper ipcHelper;
@@ -17,13 +31,13 @@ public class SteamHelper {
             ipcHelper = new IPCHelper();
             // Test if steam running
             String installPath = sendGetInstallPathPacket(ipcHelper);
-            System.out.printf("install path: %s\n", installPath);
+            LOGGER.debug("install path: {}", installPath);
             steamAvailable = true;
             // TODO: Test whether on steam deck
             onSteamDeck = true;
-            System.out.println("Successfully connected to Steam");
+            LOGGER.info("Successfully connected to Steam");
         } catch (IOException e) {
-            System.err.println("no connection to steam");
+            LOGGER.warn("no connection to steam");
             steamAvailable = false;
             onSteamDeck = false;
         }
@@ -36,9 +50,10 @@ public class SteamHelper {
     }
 
     private static String sendGetInstallPathPacket(IPCHelper ipcHelper) {
-        byte[] packet1 = {0x0e, 0x00, 0x00, 0x00};
+        byte[] packet1 = { 0x0e, 0x00, 0x00, 0x00 };
         ipcHelper.sendIpcPacket(packet1, packet1.length);
-        byte[] packet2 = {0x01, 0x04, 0x00, 0x00, 0x00, 0x00, (byte) 0xdc, 0x36, 0x72, (byte) 0xab, 0x46, 0x51, 0x07, (byte) 0xad};
+        byte[] packet2 = { 0x01, 0x04, 0x00, 0x00, 0x00, 0x00, (byte) 0xdc, 0x36, 0x72, (byte) 0xab, 0x46, 0x51, 0x07,
+            (byte) 0xad };
         ipcHelper.sendIpcPacket(packet2, packet2.length);
 
         byte[] response1 = new byte[4];
@@ -51,11 +66,13 @@ public class SteamHelper {
         ipcHelper.receiveIpcPacket(response2, responseLength);
         ByteBuffer response2Buffer = ByteBuffer.wrap(response2);
         response2Buffer.order(ByteOrder.LITTLE_ENDIAN);
-        String installPath = StandardCharsets.UTF_8.decode(response2Buffer).toString();
+        String installPath = StandardCharsets.UTF_8.decode(response2Buffer)
+            .toString();
         return installPath;
     }
 
-    private static void sendShowFloatingGamepadTextInputPacket(IPCHelper ipcHelper, int inputMode, int x, int y, int width, int height) {
+    private static void sendShowFloatingGamepadTextInputPacket(IPCHelper ipcHelper, int inputMode, int x, int y,
+        int width, int height) {
         byte[] packet1 = { 0x26, 0x00, 0x00, 0x00 };
         ByteBuffer b = ByteBuffer.allocate(38);
         byte[] header = { 0x01, 0x04, 0x00, 0x00, 0x00, 0x00, 0x39, 0x03, (byte) 0x82, 0x73 };

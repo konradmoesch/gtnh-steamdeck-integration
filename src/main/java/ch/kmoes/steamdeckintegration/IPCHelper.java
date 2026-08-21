@@ -5,7 +5,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class IPCHelper {
+
+    private static final Logger LOGGER = LogManager.getLogger("steamdeck-integration");
 
     private final Socket socket;
 
@@ -18,7 +23,7 @@ public class IPCHelper {
         try {
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             out.write(data, 0, length);
-            System.out.println("sent data via socket");
+            LOGGER.debug("sent data via socket");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -28,11 +33,7 @@ public class IPCHelper {
         try {
             DataInputStream in = new DataInputStream(socket.getInputStream());
             int read_bytes = in.read(data, 0, length);
-            System.out.println("received data from socket (" + read_bytes + ")");
-            for (byte b : data) {
-                System.out.printf("#%x ", b);
-            }
-            System.out.println();
+            LOGGER.debug("received data from socket ({}): {}", read_bytes, data);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
